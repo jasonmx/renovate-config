@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Shared Renovate preset for jasonmx repos. Public on purpose: the hosted Renovate app cannot read a preset in a private repo it isn't installed on.",
+  "description": "Shared Renovate preset for jasonmx repos. Kept identical to github>hebehomes/dev//renovate/default. Public on purpose: the hosted Renovate app cannot read a preset in a private repo it isn't installed on.",
   "extends": [
     "config:recommended",
     ":dependencyDashboard",
