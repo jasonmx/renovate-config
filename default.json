@@ -1,0 +1,102 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Shared Renovate preset for jasonmx repos. Public on purpose: the hosted Renovate app cannot read a preset in a private repo it isn't installed on.",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    "helpers:pinGitHubActionDigestsToSemver"
+  ],
+  "schedule": [
+    "before 6am on monday"
+  ],
+  "timezone": "Europe/London",
+  "pre-commit": {
+    "enabled": true
+  },
+  "customManagers": [
+    {
+      "description": "Tool versions pinned in workflow inputs, marked `# renovate: datasource=<d> depName=<n>` on the line above.",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/[^/]+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)\\s*\\n\\s*[\\w-]+:\\s*[\"']?(?<currentValue>[^\\s\"']+)"
+      ]
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "github-actions: minor and major bumps in one PR, for review.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "groupName": "github-actions (minor/major)"
+    },
+    {
+      "description": "github-actions: digest and patch bumps in one PR, merged once CI is green. A separate group, so a minor bump never holds it back. Repos with no status checks never automerge (ignoreTests stays false).",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "digest",
+        "patch"
+      ],
+      "groupName": "github-actions (digest/patch)",
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "pre-commit: minor and major bumps in one PR, for review.",
+      "matchManagers": [
+        "pre-commit"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "groupName": "pre-commit (minor/major)"
+    },
+    {
+      "description": "pre-commit: digest and patch bumps in one PR, merged once CI is green. A separate group, so a minor bump never holds it back. Repos with no status checks never automerge (ignoreTests stays false).",
+      "matchManagers": [
+        "pre-commit"
+      ],
+      "matchUpdateTypes": [
+        "digest",
+        "patch"
+      ],
+      "groupName": "pre-commit (digest/patch)",
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "description": "One PR for non-major Python updates.",
+      "matchCategories": [
+        "python"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "python (non-major)"
+    },
+    {
+      "description": "One PR for non-major npm updates.",
+      "matchCategories": [
+        "js"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "npm (non-major)"
+    }
+  ]
+}
